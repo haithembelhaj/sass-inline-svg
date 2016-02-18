@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "lint": "eslint index.js"
+    "lint": "eslint index.js",
+    "cover": "istanbul cover _mocha",
+    "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   },
   "config": {
     "ghooks": {
@@ -39,6 +41,7 @@
     "chai": "^3.3.0",
     "eslint": "^2.1.0",
     "ghooks": "^1.0.3",
+    "istanbul": "^0.4.2",
     "mocha": "^2.2.1"
   }
 }
