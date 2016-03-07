@@ -32,7 +32,7 @@ function inliner(base) {
 
       if(err) return console.warn(err);
 
-      if(selectors)
+      if(selectors && selectors.getLength && selectors.getLength())
         return done(encode(changeStyle(content, selectors)));
 
       return done(encode(content));
