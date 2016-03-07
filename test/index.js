@@ -15,4 +15,17 @@ describe('test svg inliner', function(){
       done(err);
     });
   })
+
+
+  it('should apply style to svg image', function(done){
+
+    sass.render({
+      data: '.sass{background: svg("path.svg", (path: (fill: #000)));}',
+      functions: {svg: svg(__dirname)}
+    }, function(err, result){
+
+      expect(result.css.toString()).to.equal('.sass {\n  background: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjIxMCIgd2lkdGg9IjQwMCI+PHBhdGggZmlsbD0icmdiYSgwLDAsMCwxKSIgZD0iTTE1MCAwIEw3NSAyMDAgTDIyNSAyMDAgWiIvPjwvc3ZnPg=="); }\n');
+      done(err);
+    });
+  })
 });
