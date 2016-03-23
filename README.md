@@ -24,7 +24,7 @@ var sass = require('node-sass');
 var inliner = require('sass-inline-svg')
 
 sass.render({
-  data: '.logo-icon{ background: svg("logo.svg"}',
+  data: '.logo-icon{ background: svg("logo.svg")}',
   functions: {
     
     svg: inliner('./')
@@ -55,7 +55,19 @@ grunt.initConfig({
 
 })
 ```
+## svg transformation
 
+The inliner accepts a second argument, a sass-map, that describes a css like transformation. The first keys of this map are css-selectors. Their values are also sass-maps that holds a key-value store of the svg-attribute transformation you want to apply to the corresponding selector.
+```
+
+.logo-icon{
+
+  background: svg("logo.svg", (path: (fill: green), rect: (stroke: white)));
+}
+
+```
+
+In this example `path` and `rect` are selectors and `fill: green` and `stroke: white` are the associated applied attributes.
 
 ## License
 
