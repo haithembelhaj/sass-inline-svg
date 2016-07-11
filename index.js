@@ -1,5 +1,5 @@
 // imports
-var readFile = require('fs').readFile;
+var readFileSync = require('fs').readFileSync;
 var resolve = require('path').resolve;
 var types = require('node-sass').types;
 var assign = require('object-assign');
@@ -20,23 +20,14 @@ module.exports = inliner;
  */
 function inliner(base) {
 
-  return function(path, selectors, done){
+  return function(path, selectors){
 
-    if(typeof selectors === 'function') {
+    var content = readFileSync(resolve(base, path.getValue()));
 
-      done = selectors;
-      selectors = undefined;
-    }
+    if(selectors && selectors.getLength && selectors.getLength())
+      return encode(changeStyle(content, selectors));
 
-    readFile(resolve(base, path.getValue()), function(err, content){
-
-      if(err) return console.warn(err);
-
-      if(selectors && selectors.getLength && selectors.getLength())
-        return done(encode(changeStyle(content, selectors)));
-
-      return done(encode(content));
-    });
+    return encode(content);
   }
 }
 
