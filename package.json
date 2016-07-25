@@ -1,6 +1,6 @@
 {
   "name": "sass-inline-svg",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "a node-sass function that inlines svg files",
   "main": "index.js",
   "scripts": {
