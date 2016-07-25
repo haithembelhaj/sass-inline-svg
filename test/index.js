@@ -2,6 +2,7 @@ var sass = require('node-sass');
 var svg = require('../index.js');
 var expect = require('chai').expect;
 
+
 describe('test svg inliner', function(){
 
   it('should inline svg image', function(done){
@@ -16,15 +17,26 @@ describe('test svg inliner', function(){
     });
   })
 
-
   it('should apply style to svg image', function(done){
 
     sass.render({
-      data: '.sass{background: svg("path.svg", (path: (fill: #000)));}',
+      data: '.sass{background: svg("path-optimized.svg", (path: (fill: #000)));}',
       functions: {svg: svg(__dirname)}
     }, function(err, result){
 
-      expect(result.css.toString()).to.equal('.sass {\n  background: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjIxMCIgd2lkdGg9IjQwMCI+PHBhdGggZmlsbD0icmdiYSgwLDAsMCwxKSIgZD0iTTE1MCAwIEw3NSAyMDAgTDIyNSAyMDAgWiIvPjwvc3ZnPg=="); }\n');
+      expect(result.css.toString()).to.equal('.sass {\n  background: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjIxMCIgd2lkdGg9IjQwMCI+PHBhdGggZmlsbD0icmdiYSgwLDAsMCwxKSIgZD0iTTE1MCAwTDc1IDIwMGgxNTB6Ii8+PC9zdmc+Cg=="); }\n');
+      done(err);
+    });
+  })
+
+  it('should optimize svg', function(done){
+
+    sass.render({
+      data: '.sass{background: svg("path.svg")}',
+      functions: {svg: svg(__dirname, {optimize: true})}
+    }, function(err, result){
+
+      expect(result.css.toString()).to.equal('.sass {\n  background: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjIxMCIgd2lkdGg9IjQwMCI+PHBhdGggZmlsbD0icmVkIiBkPSJNMTUwIDBMNzUgMjAwaDE1MHoiLz48L3N2Zz4="); }\n');
       done(err);
     });
   })

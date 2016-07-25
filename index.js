@@ -1,13 +1,17 @@
 // imports
-var readFileSync = require('fs').readFileSync;
-var resolve = require('path').resolve;
-var types = require('node-sass').types;
-var assign = require('object-assign');
-var parse = require('htmlparser2').parseDOM;
-var selectAll = require('css-select');
-var selectOne = selectAll.selectOne;
-var serialize = require('dom-serializer');
+const deasync = require('deasync');
+const readFileSync = require('fs').readFileSync;
+const resolve = require('path').resolve;
+const types = require('node-sass').types;
+const assign = require('object-assign');
+const parse = require('htmlparser2').parseDOM;
+const selectAll = require('css-select');
+const selectOne = selectAll.selectOne;
+const serialize = require('dom-serializer');
+const svgo = new (require('svgo'));
+const optimize = deasync(optimizeAsync);
 
+const defaultOptions = {optimize: false}
 
 // exports
 module.exports = inliner;
@@ -16,13 +20,19 @@ module.exports = inliner;
  * The SVG inliner function
  * This is a factory that expects a base path abd returns the actual function
  * @param base
+ * @param opts {optimize: true/false}
  * @returns {Function}
  */
-function inliner(base) {
+function inliner(base, opts) {
+
+  opts = assign({}, defaultOptions, opts);
 
   return function(path, selectors){
 
     var content = readFileSync(resolve(base, path.getValue()));
+
+    if(opts.optimize)
+      content = new Buffer(optimize(content).data);
 
     if(selectors && selectors.getLength && selectors.getLength())
       return encode(changeStyle(content, selectors));
@@ -51,9 +61,10 @@ function encode(content){
  */
 function changeStyle(source, selectors){
 
-  var selectors = mapToObj(selectors);
-  var dom = parse(source, { xmlMode: true });
-  var svg = dom ? selectOne('svg', dom) : null;
+  const dom = parse(source, { xmlMode: true });
+  const svg = dom ? selectOne('svg', dom) : null;
+
+  selectors = mapToObj(selectors);
 
   if (!svg) {
 
@@ -62,8 +73,8 @@ function changeStyle(source, selectors){
 
   Object.keys(selectors).forEach(function (selector) {
 
+    const elements = selectAll(selector, svg);
     var attribs = selectors[selector];
-    var elements = selectAll(selector, svg);
 
     elements.forEach(function (element) {
       assign(element.attribs, attribs);
@@ -80,11 +91,11 @@ function changeStyle(source, selectors){
  */
 function mapToObj(map){
 
-  var obj = Object.create(null);
+  const obj = Object.create(null);
 
   for(var i = 0, len = map.getLength(); i < len; i++){
 
-    var key = map.getKey(i).getValue();
+    const key = map.getKey(i).getValue();
     var value = map.getValue(i);
 
     switch(value.toString()) {
@@ -103,4 +114,13 @@ function mapToObj(map){
   }
 
   return obj;
+}
+
+
+function optimizeAsync(src, cb){
+
+  svgo.optimize(src, function(result){
+
+    return cb(null, result)
+  })
 }

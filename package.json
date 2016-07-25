@@ -36,10 +36,12 @@
   "homepage": "https://github.com/haithembelhaj/sass-inline-svg",
   "dependencies": {
     "css-select": "^1.2.0",
+    "deasync": "^0.1.7",
     "dom-serializer": "^0.1.0",
     "htmlparser2": "^3.9.0",
     "node-sass": "^3.3.3",
-    "object-assign": "^4.0.1"
+    "object-assign": "^4.0.1",
+    "svgo": "^0.6.6"
   },
   "devDependencies": {
     "chai": "^3.3.0",
