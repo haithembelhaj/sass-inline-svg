@@ -15,7 +15,8 @@ $ npm install --save-dev sass-inline-svg
 
 You can use this function in node-sass or any project that depends on node-sass.
 The only thing you need to do to make this work is add the inlinerfunction to the functions option.
-You should initialise the inlienr ith a basepath wehe it will llook at svg files.
+
+You should initialize the inliner with a basepath where it will look for the svg files.
  
 ### node-sass
 
