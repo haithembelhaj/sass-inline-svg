@@ -17,7 +17,7 @@ You can use this function in node-sass or any project that depends on node-sass.
 The only thing you need to do to make this work is add the inlinerfunction to the functions option.
 
 You should initialize the inliner with a basepath where it will look for the svg files.
- 
+
 ### node-sass
 
 ```js
@@ -27,11 +27,25 @@ var inliner = require('sass-inline-svg')
 sass.render({
   data: '.logo-icon{ background: svg("logo.svg")}',
   functions: {
-    
+
     svg: inliner('./', [options])
   }
 });
+```
 
+#### node-sass CLI usage
+
+```
+node-sass --functions=node_modules/sass-inline-svg/default [other node-sass arguments]
+```
+
+This is equivalent to specifying the following:
+
+```
+functions: {
+  'svg': inliner('./', {}),
+  'inline-svg': inliner('./', {})
+}
 ```
 
 ### grunt-sass
@@ -42,25 +56,26 @@ var compass = require('sass-inline-svg')
 
 
 grunt.initConfig({
-    
+
     sass:{
-       
+
         options: {
             functions: {
-                
+
                 svg: inliner('./', [options])
             }
         },
-        ...        
+        ...
     }
 
 })
 ```
+
 ## options
 
 ### optimize (default false)
 
-`{optimize: true}` uses [svgo](https://github.com/svg/svgo) internally to optmize the svg. 
+`{optimize: true}` uses [svgo](https://github.com/svg/svgo) internally to optmize the svg.
 
 ## svg transformation
 
