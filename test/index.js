@@ -1,6 +1,8 @@
-var sass = require('node-sass');
-var svg = require('../index.js');
-var expect = require('chai').expect;
+const sass = require('node-sass');
+const svg = require('../index.js');
+const expect = require('chai').expect;
+const fs = require('fs');
+const resolve = require('path').resolve;
 
 
 describe('test svg inliner', function(){
@@ -12,7 +14,9 @@ describe('test svg inliner', function(){
       functions: {svg: svg(__dirname)}
     }, function(err, result){
 
-      expect(result.css.toString()).to.equal('.sass {\n  background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgMTAgMTAiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPC9zdmc+DQo="); }\n');
+      const expectedResult = fs.readFileSync(resolve(__dirname, 'test.svg')).toString('base64');
+
+      expect(result.css.toString()).to.equal(`.sass {\n  background: url("data:image/svg+xml;base64,${expectedResult}"); }\n`);
       done(err);
     });
   })
@@ -24,7 +28,9 @@ describe('test svg inliner', function(){
       functions: {svg: svg(__dirname)}
     }, function(err, result){
 
-      expect(result.css.toString()).to.equal('.sass {\n  background: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjIxMCIgd2lkdGg9IjQwMCI+PHBhdGggZmlsbD0icmdiYSgwLDAsMCwxKSIgZD0iTTE1MCAwTDc1IDIwMGgxNTB6Ii8+PC9zdmc+Cg=="); }\n');
+      const expectedResult = new Buffer('<svg height="210" width="400"><path fill="rgba(0,0,0,1)" d="M150 0L75 200h150z"/></svg>\n').toString('base64');
+
+      expect(result.css.toString()).to.equal(`.sass {\n  background: url("data:image/svg+xml;base64,${expectedResult}"); }\n`);
       done(err);
     });
   })
@@ -36,7 +42,23 @@ describe('test svg inliner', function(){
       functions: {svg: svg(__dirname, {optimize: true})}
     }, function(err, result){
 
-      expect(result.css.toString()).to.equal('.sass {\n  background: url("data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjIxMCIgd2lkdGg9IjQwMCI+PHBhdGggZmlsbD0icmVkIiBkPSJNMTUwIDBMNzUgMjAwaDE1MHoiLz48L3N2Zz4="); }\n');
+      const expectedResult = new Buffer('<svg height="210" width="400"><path fill="red" d="M150 0L75 200h150z"/></svg>').toString('base64');
+
+      expect(result.css.toString()).to.equal(`.sass {\n  background: url("data:image/svg+xml;base64,${expectedResult}"); }\n`);
+      done(err);
+    });
+  })
+
+  it('should optimize svg with styling', function(done){
+
+    sass.render({
+      data: '.sass{background: svg("path.svg", (path: (fill: #000)))}',
+      functions: {svg: svg(__dirname, {optimize: true})}
+    }, function(err, result){
+
+      const expectedResult = new Buffer('<svg height="210" width="400"><path fill="rgba(0,0,0,1)" d="M150 0L75 200h150z"/></svg>').toString('base64');
+
+      expect(result.css.toString()).to.equal(`.sass {\n  background: url("data:image/svg+xml;base64,${expectedResult}"); }\n`);
       done(err);
     });
   })

@@ -29,13 +29,14 @@ function inliner(base, opts) {
 
   return function(path, selectors){
 
-    var content = readFileSync(resolve(base, path.getValue()));
+    let content = readFileSync(resolve(base, path.getValue()));
+
+    if(selectors && selectors.getLength && selectors.getLength())
+      content = changeStyle(content, selectors);
 
     if(opts.optimize)
       content = new Buffer(optimize(content).data);
 
-    if(selectors && selectors.getLength && selectors.getLength())
-      return encode(changeStyle(content, selectors));
 
     return encode(content);
   }
@@ -74,7 +75,7 @@ function changeStyle(source, selectors){
   Object.keys(selectors).forEach(function (selector) {
 
     const elements = selectAll(selector, svg);
-    var attribs = selectors[selector];
+    let attribs = selectors[selector];
 
     elements.forEach(function (element) {
       assign(element.attribs, attribs);
@@ -93,10 +94,10 @@ function mapToObj(map){
 
   const obj = Object.create(null);
 
-  for(var i = 0, len = map.getLength(); i < len; i++){
+  for(let i = 0, len = map.getLength(); i < len; i++){
 
     const key = map.getKey(i).getValue();
-    var value = map.getValue(i);
+    let value = map.getValue(i);
 
     switch(value.toString()) {
 
