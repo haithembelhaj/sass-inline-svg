@@ -12,7 +12,7 @@ const svgToDataUri = require('mini-svg-data-uri');
 const svgo = new (require('svgo'));
 const optimize = deasync(optimizeAsync);
 
-const defaultOptions = {optimize: false, encodingFormat: 'uri'}
+const defaultOptions = {optimize: false, encodingFormat: 'base64'}
 
 // exports
 module.exports = inliner;

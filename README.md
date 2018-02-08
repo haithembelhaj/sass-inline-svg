@@ -77,7 +77,7 @@ grunt.initConfig({
 
 `{optimize: true}` uses [svgo](https://github.com/svg/svgo) internally to optmize the svg.
 
-### encodingFormat (default: uri)
+### encodingFormat (default: base64)
 
 `base64` will encode the SVG with base64, while `uri` will do a minimal URI-encoding of the svg – `uri` is always smaller, and has good browser support as well.
 
