@@ -8,10 +8,11 @@ const parse = require('htmlparser2').parseDOM;
 const selectAll = require('css-select');
 const selectOne = selectAll.selectOne;
 const serialize = require('dom-serializer');
+const svgToDataUri = require('mini-svg-data-uri');
 const svgo = new (require('svgo'));
 const optimize = deasync(optimizeAsync);
 
-const defaultOptions = {optimize: false}
+const defaultOptions = {optimize: false, encodingFormat: 'uri'}
 
 // exports
 module.exports = inliner;
@@ -38,7 +39,7 @@ function inliner(base, opts) {
       content = new Buffer(optimize(content).data);
 
 
-    return encode(content);
+    return encode(content, {encodingFormat: opts.encodingFormat});
   }
 }
 
@@ -46,11 +47,18 @@ function inliner(base, opts) {
 /**
  * encode the string
  * @param content
+ * @param opts
  * @returns {types.String}
  */
-function encode(content){
+function encode(content, opts){
 
-  return (new types.String('url("data:image/svg+xml;base64,'+content.toString('base64')+'")'));
+  if (opts.encodingFormat === 'uri') {
+	  return (new types.String('url("'+svgToDataUri(content.toString('UTF-8'))+'")'));
+  } else if (opts.encodingFormat === 'base64') {
+	  return (new types.String('url("data:image/svg+xml;base64,'+content.toString('base64')+'")'));
+  } else {
+	  throw new Error('encodingFormat ' + opts.encodingFormat + ' is not supported');
+  }
 }
 
 
