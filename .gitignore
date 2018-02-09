@@ -3,4 +3,5 @@
 node_modules
 .compass
 .idea
+.coveralls.yml
 /npm-debug.log
