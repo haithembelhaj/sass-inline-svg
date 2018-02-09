@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/haithembelhaj/sass-inline-svg.svg)](https://travis-ci.org/haithembelhaj/sass-inline-svg)
+[![Coverage Status](https://coveralls.io/repos/github/haithembelhaj/sass-inline-svg/badge.svg?branch=master)](https://coveralls.io/github/haithembelhaj/sass-inline-svg?branch=master)
 [![Dependency Status](https://david-dm.org/haithembelhaj/sass-inline.svg)](https://david-dm.org/haithembelhaj/sass-inline-svg)
 [![devDependency Status](https://david-dm.org/haithembelhaj/sass-inline-svg/dev-status.svg)](https://david-dm.org/haithembelhaj/sass-inline-svg#info=devDependencies)
-[![Coverage Status](https://coveralls.io/repos/github/haithembelhaj/sass-inline-svg/badge.svg?branch=master)](https://coveralls.io/github/haithembelhaj/sass-inline-svg?branch=master)
 # sass-inline-svg
 
 ## Install
