@@ -3,11 +3,12 @@ const svg = require('../index.js');
 const expect = require('chai').expect;
 const fs = require('fs');
 const resolve = require('path').resolve;
+const encodeMiniUri = require('mini-svg-data-uri');
 
 
 describe('test svg inliner', function(){
 
-  it('should inline svg image', function(done){
+  it('should inline svg image as base64', function(done){
 
     sass.render({
       data: '.sass{background: svg("test.svg");}',
@@ -20,6 +21,21 @@ describe('test svg inliner', function(){
       done(err);
     });
   })
+
+  it('should inline svg image as uri', function(done){
+
+    sass.render({
+      data: '.sass{background: svg("test.svg");}',
+      functions: {svg: svg(__dirname, {encodingFormat: 'uri'})}
+    }, function(err, result){
+
+      const expectedResult = encodeMiniUri(fs.readFileSync(resolve(__dirname, 'test.svg')).toString('utf-8'));
+
+      expect(result.css.toString()).to.equal(`.sass {\n  background: url("${expectedResult}"); }\n`);
+      done(err);
+    });
+  })
+
 
   it('should apply style to svg image', function(done){
 

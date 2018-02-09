@@ -77,6 +77,10 @@ grunt.initConfig({
 
 `{optimize: true}` uses [svgo](https://github.com/svg/svgo) internally to optmize the svg.
 
+### encodingFormat (default: base64)
+
+`base64` will encode the SVG with base64, while `uri` will do a minimal URI-encoding of the svg – `uri` is always smaller, and has good browser support as well.
+
 ## svg transformation
 
 The inliner accepts a second argument, a sass-map, that describes a css like transformation. The first keys of this map are css-selectors. Their values are also sass-maps that holds a key-value store of the svg-attribute transformation you want to apply to the corresponding selector.
