@@ -53,12 +53,16 @@ function inliner(base, opts) {
 function encode(content, opts){
 
   if (opts.encodingFormat === 'uri') {
+
 	  return (new types.String('url("'+svgToDataUri(content.toString('UTF-8'))+'")'));
-  } else if (opts.encodingFormat === 'base64') {
-	  return (new types.String('url("data:image/svg+xml;base64,'+content.toString('base64')+'")'));
-  } else {
-	  throw new Error('encodingFormat ' + opts.encodingFormat + ' is not supported');
   }
+
+  if (opts.encodingFormat === 'base64') {
+
+	  return (new types.String('url("data:image/svg+xml;base64,'+content.toString('base64')+'")'));
+  }
+
+  throw new Error('encodingFormat ' + opts.encodingFormat + ' is not supported');
 }
 
 
