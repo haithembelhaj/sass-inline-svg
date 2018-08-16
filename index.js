@@ -117,7 +117,11 @@ function mapToObj(map){
         value = mapToObj(value);
         break;
       case '[object SassColor]':
-        value = 'rgba('+value.getR()+','+value.getG()+','+value.getB()+','+value.getA()+')';
+        if (value.getA() === 1) {
+          value = 'rgb('+value.getR()+','+value.getG()+','+value.getB()+')';
+        } else {
+          value = 'rgba('+value.getR()+','+value.getG()+','+value.getB()+','+value.getA()+')';
+        }
         break;
       default:
         value = value.getValue();
