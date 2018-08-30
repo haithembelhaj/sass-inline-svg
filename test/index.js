@@ -44,7 +44,21 @@ describe('test svg inliner', function(){
       functions: {svg: svg(__dirname)}
     }, function(err, result){
 
-      const expectedResult = new Buffer('<svg height="210" width="400"><path fill="rgba(0,0,0,1)" d="M150 0L75 200h150z"/></svg>\n').toString('base64');
+      const expectedResult = new Buffer('<svg height="210" width="400"><path fill="rgb(0,0,0)" d="M150 0L75 200h150z"/></svg>\n').toString('base64');
+
+      expect(result.css.toString()).to.equal(`.sass {\n  background: url("data:image/svg+xml;base64,${expectedResult}"); }\n`);
+      done(err);
+    });
+  })
+
+  it('should apply alpha value if set in the colour', function(done){
+
+    sass.render({
+      data: '.sass{background: svg("path-optimized.svg", (path: (fill: rgba(0,0,0,0.5))));}',
+      functions: {svg: svg(__dirname)}
+    }, function(err, result){
+
+      const expectedResult = new Buffer('<svg height="210" width="400"><path fill="rgba(0,0,0,0.5)" d="M150 0L75 200h150z"/></svg>\n').toString('base64');
 
       expect(result.css.toString()).to.equal(`.sass {\n  background: url("data:image/svg+xml;base64,${expectedResult}"); }\n`);
       done(err);
@@ -68,11 +82,11 @@ describe('test svg inliner', function(){
   it('should optimize svg with styling', function(done){
 
     sass.render({
-      data: '.sass{background: svg("path.svg", (path: (fill: #000)))}',
+      data: '.sass{background: svg("path.svg", (path: (fill: #fff)))}',
       functions: {svg: svg(__dirname, {optimize: true})}
     }, function(err, result){
 
-      const expectedResult = new Buffer('<svg height="210" width="400"><path fill="rgba(0,0,0,1)" d="M150 0L75 200h150z"/></svg>').toString('base64');
+      const expectedResult = new Buffer('<svg height="210" width="400"><path fill="#FFF" d="M150 0L75 200h150z"/></svg>').toString('base64');
 
       expect(result.css.toString()).to.equal(`.sass {\n  background: url("data:image/svg+xml;base64,${expectedResult}"); }\n`);
       done(err);
