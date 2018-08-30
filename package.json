@@ -49,8 +49,8 @@
     "eslint": "^2.1.0",
     "ghooks": "^1.0.3",
     "istanbul": "^0.4.2",
-    "mocha": "^2.2.1",
-    "node-sass": "^4.5.3"
+    "mocha": "^5.2.0",
+    "node-sass": "^4.9.3"
   },
   "peerDependencies": {
     "node-sass": "^4.5.3"
