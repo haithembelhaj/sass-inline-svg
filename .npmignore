@@ -1,1 +1,7 @@
 test
+.nyc_output
+.editorconfig 
+.editorconfig                                              
+.eslintignore
+.eslintrc
+.travis.yml
