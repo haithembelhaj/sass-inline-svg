@@ -4,5 +4,6 @@ node_modules
 .compass
 .idea
 .coveralls.yml
+.nyc_output
 coverage
 /npm-debug.log
