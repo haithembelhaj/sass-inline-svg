@@ -52,7 +52,7 @@ functions: {
 
 
 ```js
-var compass = require('sass-inline-svg')
+var inliner = require('sass-inline-svg')
 
 
 grunt.initConfig({
