@@ -1,6 +1,6 @@
 const inliner = require('./index');
 
 module.exports = {
-  'svg': inliner('./', {}),
-  'inline-svg': inliner('./', {})
+  'svg($path, $selectors: null)': inliner('./', {}),
+  'inline-svg($path, $selectors: null)': inliner('./', {})
 };
