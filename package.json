@@ -1,11 +1,11 @@
 {
   "name": "sass-inline-svg",
-  "version": "1.2.3",
-  "description": "a node-sass function that inlines svg files",
+  "version": "2.0.0",
+  "description": "a sass function that inlines svg files",
   "main": "index.js",
   "scripts": {
     "test": "nyc mocha",
-    "lint": "eslint index.js",
+    "lint": "eslint index.js default.js test/**/*.js",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "config": {
@@ -25,33 +25,42 @@
     "svg",
     "inline",
     "function",
-    "node-sass"
+    "sass"
   ],
   "author": "Haithem Bel Haj",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/haithembelhaj/sass-inline-svg/issues"
   },
   "homepage": "https://github.com/haithembelhaj/sass-inline-svg",
   "dependencies": {
-    "css-select": "^1.2.0",
-    "deasync": "^0.1.7",
-    "dom-serializer": "^0.1.0",
-    "htmlparser2": "^3.9.0",
-    "mini-svg-data-uri": "^1.0.0",
-    "object-assign": "^4.0.1",
-    "svgo": "^1.3.0"
+    "css-select": "^2.1.0",
+    "deasync": "^0.1.20",
+    "dom-serializer": "^1.0.1",
+    "htmlparser2": "^4.1.0",
+    "mini-svg-data-uri": "^1.2.3",
+    "object-assign": "^4.1.1",
+    "svgo": "^1.3.2"
   },
   "devDependencies": {
-    "chai": "^3.3.0",
-    "coveralls": "^3.0.0",
-    "eslint": "^2.1.0",
-    "ghooks": "^1.0.3",
-    "mocha": "^5.2.0",
-    "node-sass": "^4.9.3",
-    "nyc": "^14.1.1"
+    "chai": "^4.2.0",
+    "coveralls": "^3.1.0",
+    "eslint": "^7.5.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-mocha": "^7.0.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "ghooks": "^2.0.4",
+    "mocha": "^8.0.1",
+    "nyc": "^15.1.0",
+    "sass": "^1.26.10"
   },
   "peerDependencies": {
-    "node-sass": "^4.5.3"
+    "sass": "^1.26.10"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

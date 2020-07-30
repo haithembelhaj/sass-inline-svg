@@ -2,17 +2,19 @@
 const deasync = require('deasync');
 const readFileSync = require('fs').readFileSync;
 const resolve = require('path').resolve;
-const types = require('node-sass').types;
+const types = require('sass').types;
 const assign = require('object-assign');
 const parse = require('htmlparser2').parseDOM;
 const selectAll = require('css-select');
 const selectOne = selectAll.selectOne;
-const serialize = require('dom-serializer');
+const serialize = require('dom-serializer').default;
 const svgToDataUri = require('mini-svg-data-uri');
 const svgo = new (require('svgo'))();
 const optimize = deasync(optimizeAsync);
 
-const defaultOptions = { optimize: false, encodingFormat: 'base64' };
+const defaultOptions = {
+  optimize: false, encodingFormat: 'base64'
+};
 
 // exports
 module.exports = inliner;
@@ -24,17 +26,23 @@ module.exports = inliner;
  * @param opts {optimize: true/false}
  * @returns {Function}
  */
-function inliner(base, opts) {
+function inliner (base, opts) {
   opts = assign({}, defaultOptions, opts);
 
-  return function(path, selectors) {
-    let content = readFileSync(resolve(base, path.getValue()));
+  return function (path, selectors) {
+    try {
+      let content = readFileSync(resolve(base, path.getValue()));
 
-    if (selectors && selectors.getLength && selectors.getLength()) content = changeStyle(content, selectors);
+      if (selectors && selectors.getLength && selectors.getLength()) { content = changeStyle(content, selectors); }
 
-    if (opts.optimize) content = new Buffer(optimize(content).data);
+      if (opts.optimize) { content = Buffer.from(optimize(content).data, 'utf8'); }
 
-    return encode(content, { encodingFormat: opts.encodingFormat });
+      return encode(content, {
+        encodingFormat: opts.encodingFormat
+      });
+    } catch (err) {
+      console.log(err);
+    }
   };
 }
 
@@ -44,7 +52,7 @@ function inliner(base, opts) {
  * @param opts
  * @returns {types.String}
  */
-function encode(content, opts) {
+function encode (content, opts) {
   if (opts.encodingFormat === 'uri') {
     return new types.String('url("' + svgToDataUri(content.toString('UTF-8')) + '")');
   }
@@ -62,8 +70,10 @@ function encode(content, opts) {
  * @param styles
  * @returns {*}
  */
-function changeStyle(source, selectors) {
-  const dom = parse(source, { xmlMode: true });
+function changeStyle (source, selectors) {
+  const dom = parse(source, {
+    xmlMode: true
+  });
   const svg = dom ? selectOne('svg', dom) : null;
 
   selectors = mapToObj(selectors);
@@ -72,16 +82,16 @@ function changeStyle(source, selectors) {
     throw Error('Invalid svg file');
   }
 
-  Object.keys(selectors).forEach(function(selector) {
+  Object.keys(selectors).forEach(function (selector) {
     const elements = selectAll(selector, svg);
-    let attribs = selectors[selector];
+    const attribs = selectors[selector];
 
-    elements.forEach(function(element) {
+    elements.forEach(function (element) {
       assign(element.attribs, attribs);
     });
   });
 
-  return new Buffer(serialize(dom));
+  return Buffer.from(serialize(dom), 'utf8');
 }
 
 /**
@@ -89,18 +99,18 @@ function changeStyle(source, selectors) {
  * @param map
  * @returns {null}
  */
-function mapToObj(map) {
+function mapToObj (map) {
   const obj = Object.create(null);
 
   for (let i = 0, len = map.getLength(); i < len; i++) {
     const key = map.getKey(i).getValue();
     let value = map.getValue(i);
 
-    switch (value.toString()) {
-      case '[object SassMap]':
+    switch (value.constructor.name) {
+      case types.Map.name:
         value = mapToObj(value);
         break;
-      case '[object SassColor]':
+      case types.Color.name:
         if (value.getA() === 1) {
           value = 'rgb(' + value.getR() + ',' + value.getG() + ',' + value.getB() + ')';
         } else {
@@ -117,10 +127,10 @@ function mapToObj(map) {
   return obj;
 }
 
-function optimizeAsync(src, cb) {
+function optimizeAsync (src, cb) {
   svgo
     .optimize(src)
-    .then(function(result) {
+    .then(function (result) {
       return cb(null, result);
     })
     .catch(cb);
