@@ -11,6 +11,7 @@ const serialize = require('dom-serializer');
 const svgToDataUri = require('mini-svg-data-uri');
 const svgo = new (require('svgo'))();
 const optimize = deasync(optimizeAsync);
+const util = require('util');
 
 const defaultOptions = { optimize: false, encodingFormat: 'base64' };
 
@@ -96,11 +97,11 @@ function mapToObj(map) {
     const key = map.getKey(i).getValue();
     let value = map.getValue(i);
 
-    switch (value.toString()) {
-      case '[object SassMap]':
+    switch (util.inspect(value)) {
+      case 'SassMap {}':
         value = mapToObj(value);
         break;
-      case '[object SassColor]':
+      case 'SassColor {}':
         if (value.getA() === 1) {
           value = 'rgb(' + value.getR() + ',' + value.getG() + ',' + value.getB() + ')';
         } else {
